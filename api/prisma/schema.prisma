@@ -12,9 +12,13 @@ model Customer {
   name      String
   email     String     @unique
   phone     String?
+  picture   String?
   createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   roles     CustomerRole[]
   credentials EmailCredential[]
+  accounts  Account[]
+  sessions  Session[]
 }
 
 model Role {
@@ -46,4 +50,32 @@ model AuthIdentity {
   provider          String
   providerAccountId String
   credentials       EmailCredential[]
+}
+
+model Account {
+  id                Int       @id @default(autoincrement())
+  customer          Customer  @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId        Int
+  provider          String    // "google", "email", etc.
+  providerAccountId String    // Google user ID
+  accessToken       String?   @db.Text
+  refreshToken      String?   @db.Text
+  expiresAt         DateTime?
+  tokenType         String?
+  scope             String?
+  idToken           String?   @db.Text
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique
+  customer     Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
+  customerId   Int
+  expires      DateTime
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

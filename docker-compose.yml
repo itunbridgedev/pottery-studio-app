@@ -20,14 +20,19 @@ services:
     restart: always
     ports:
       - "4000:4000"
-      - "5555:5555"
     env_file:
-      - ./api/.env
+      - ./api/.env.${NODE_ENV:-development}
     depends_on:
       - db
-    environment:
-      PRISMA_STUDIO_HOST: 0.0.0.0
-    command: sh -c "npx prisma migrate deploy && npm run dev"
+
+  web:
+    build: ./web
+    container_name: pottery-web
+    restart: always
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
 
 volumes:
   pottery-db-data:

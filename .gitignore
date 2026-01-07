@@ -23,12 +23,24 @@ Thumbs.db
 
 # Environment variables
 .env
+.env.*
+!.env.example
 .env.local
+.env.development
 .env.development.local
+.env.test
 .env.test.local
+.env.production
 .env.production.local
 /api/.env
+/api/.env.*
+!/api/.env.example
 /web/.env
+/web/.env.*
+!/web/.env.example
+
+# VS Code History (may contain secrets)
+.history/
 
 # Apple OAuth Keys
 *.p8

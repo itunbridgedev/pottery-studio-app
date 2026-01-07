@@ -15,6 +15,7 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: () => void;
+  loginWithApple: () => void;
   loginWithEmail: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
@@ -66,6 +67,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const login = () => {
     // Redirect to Google OAuth
     window.location.href = "/api/auth/google";
+  };
+
+  const loginWithApple = () => {
+    // Redirect to Apple OAuth
+    window.location.href = "/api/auth/apple";
   };
 
   const loginWithEmail = async (email: string, password: string) => {
@@ -127,6 +133,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         user,
         loading,
         login,
+        loginWithApple,
         loginWithEmail,
         register,
         logout,

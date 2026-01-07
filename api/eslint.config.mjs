@@ -22,12 +22,12 @@ export default [
       "@typescript-eslint/no-explicit-any": "warn",
       "@typescript-eslint/explicit-module-boundary-types": "off",
       "@typescript-eslint/no-non-null-assertion": "warn",
-      
+
       // Node.js/Express
       "no-console": "off", // Allow console in backend
       "prefer-const": "warn",
       "no-var": "error",
-      
+
       // General
       "no-unused-expressions": "warn",
       "no-duplicate-imports": "error",

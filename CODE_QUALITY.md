@@ -11,6 +11,7 @@ This project uses ESLint and Prettier to maintain consistent code quality and fo
 ## Quick Start
 
 ### Format All Code
+
 ```bash
 # Format frontend
 cd web && npm run format
@@ -24,6 +25,7 @@ cd api && npm run format:check
 ```
 
 ### Lint Code
+
 ```bash
 # Lint frontend
 cd web && npm run lint
@@ -39,31 +41,39 @@ cd api && npm run lint:fix
 ## Configuration Files
 
 ### Frontend (Next.js)
+
 - `web/eslint.config.mjs` - ESLint configuration with Next.js and TypeScript rules
 - `web/.prettierrc` - Prettier formatting rules
 - `web/.prettierignore` - Files to exclude from formatting
 
 ### Backend (Express API)
+
 - `api/eslint.config.mjs` - ESLint configuration for Node.js/Express
 - `api/.prettierrc` - Prettier formatting rules
 - `api/.prettierignore` - Files to exclude from formatting
 
 ### Root
+
 - `.prettierrc` - Shared Prettier config for root-level files
 - `.prettierignore` - Root-level ignore patterns
 
 ## VS Code Integration
 
 ### Automatic Formatting
+
 Files are automatically formatted on save if you have the Prettier extension installed.
 
 ### Recommended Extensions
+
 The workspace recommends:
+
 - **ESLint** (`dbaeumer.vscode-eslint`) - Real-time linting
 - **Prettier** (`esbenp.prettier-vscode`) - Code formatting
 
 ### Settings
+
 See `.vscode/settings.json` for workspace configuration:
+
 - Format on save enabled
 - Auto-fix ESLint issues on save
 - Organize imports on save
@@ -86,6 +96,7 @@ See `.vscode/settings.json` for workspace configuration:
 ```
 
 ### Style Rules
+
 - ✅ Semicolons required
 - ✅ Double quotes (not single)
 - ✅ 80 character line width
@@ -97,6 +108,7 @@ See `.vscode/settings.json` for workspace configuration:
 ## ESLint Rules
 
 ### Frontend (Next.js)
+
 - **Next.js Core Web Vitals** - Performance and best practices
 - **TypeScript Recommended** - Type safety rules
 - **React Hooks** - Proper hook usage
@@ -104,6 +116,7 @@ See `.vscode/settings.json` for workspace configuration:
 - **Unused vars** - Warn on unused variables (allows `_` prefix)
 
 ### Backend (Express/Node.js)
+
 - **TypeScript Recommended** - Type safety
 - **No explicit any** - Warn on `any` usage
 - **Unused vars** - Warn on unused variables
@@ -113,6 +126,7 @@ See `.vscode/settings.json` for workspace configuration:
 ## NPM Scripts
 
 ### Frontend (`web/package.json`)
+
 ```json
 {
   "scripts": {
@@ -128,6 +142,7 @@ See `.vscode/settings.json` for workspace configuration:
 ```
 
 ### Backend (`api/package.json`)
+
 ```json
 {
   "scripts": {
@@ -144,6 +159,7 @@ See `.vscode/settings.json` for workspace configuration:
 ## Common Workflows
 
 ### Before Committing
+
 ```bash
 # Check and fix formatting
 cd web && npm run format && cd ../api && npm run format
@@ -158,6 +174,7 @@ cd api && npm run lint:fix
 ```
 
 ### Pre-commit Hook (Optional)
+
 Consider adding `husky` and `lint-staged` for automatic checks:
 
 ```bash
@@ -176,12 +193,14 @@ npm install -D husky lint-staged
 ## Ignoring Files
 
 ### Prettier Ignore Patterns
+
 - `node_modules/`
 - `.next/`, `dist/`, `build/`
 - `prisma/migrations/`
 - Lock files (`package-lock.json`, etc.)
 
 ### ESLint Ignore Patterns
+
 - Generated files (`.next/`, `dist/`)
 - Config files (`*.config.js`, `*.config.mjs`)
 - Migrations (`prisma/migrations/`)
@@ -189,30 +208,38 @@ npm install -D husky lint-staged
 ## Common Issues
 
 ### 1. "Parsing error" in ESLint
+
 **Solution**: Ensure `tsconfig.json` exists and is properly configured.
 
 ### 2. Prettier and ESLint conflict
+
 **Solution**: We use `eslint-config-prettier` to disable conflicting rules.
 
 ### 3. VS Code not formatting
-**Solution**: 
+
+**Solution**:
+
 - Install Prettier extension
 - Check `.vscode/settings.json` is present
 - Verify "Format on Save" is enabled
 
 ### 4. ESLint warnings on `any` types
+
 **Recommendation**: Use specific types instead of `any`:
+
 ```typescript
 // ❌ Avoid
 function handler(req: any, res: any) {}
 
 // ✅ Better
-import { Request, Response } from 'express';
+import { Request, Response } from "express";
 function handler(req: Request, res: Response) {}
 ```
 
 ### 5. Unused variable warnings
+
 **Solution**: Prefix with underscore to indicate intentionally unused:
+
 ```typescript
 // ❌ Warning
 const [user, setUser] = useState();
@@ -224,6 +251,7 @@ const [_user, setUser] = useState();
 ## Customization
 
 ### Adding ESLint Rules
+
 Edit `eslint.config.mjs`:
 
 ```javascript
@@ -234,25 +262,27 @@ export default [
       // Add your custom rules
       "no-console": "error", // Make console an error instead of warning
       "@typescript-eslint/no-explicit-any": "error", // Error on any
-    }
-  }
+    },
+  },
 ];
 ```
 
 ### Changing Prettier Settings
+
 Edit `.prettierrc`:
 
 ```json
 {
-  "semi": false,        // Remove semicolons
-  "singleQuote": true,  // Use single quotes
-  "printWidth": 100     // Wider lines
+  "semi": false, // Remove semicolons
+  "singleQuote": true, // Use single quotes
+  "printWidth": 100 // Wider lines
 }
 ```
 
 ## CI/CD Integration
 
 ### GitHub Actions Example
+
 ```yaml
 name: Lint and Format
 
@@ -265,8 +295,8 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
         with:
-          node-version: '20'
-      
+          node-version: "20"
+
       # Frontend
       - name: Install web dependencies
         run: cd web && npm ci
@@ -274,7 +304,7 @@ jobs:
         run: cd web && npm run lint
       - name: Check web formatting
         run: cd web && npm run format:check
-      
+
       # Backend
       - name: Install api dependencies
         run: cd api && npm ci
@@ -287,17 +317,21 @@ jobs:
 ## Current Linting Status
 
 ### Frontend (web/)
+
 ✅ All files formatted with Prettier  
 ✅ ESLint configured with Next.js rules  
-✅ TypeScript strict mode enabled  
+✅ TypeScript strict mode enabled
 
 ### Backend (api/)
+
 ✅ All files formatted with Prettier  
 ⚠️ 11 ESLint warnings (mostly `any` type usage - non-blocking)  
-✅ TypeScript strict mode enabled  
+✅ TypeScript strict mode enabled
 
 ### Warnings to Address
+
 The backend has some warnings about:
+
 - `any` types in passport configuration
 - `any` types in middleware functions
 - Non-null assertions in OAuth setup
@@ -307,18 +341,23 @@ These are warnings, not errors, and don't block development.
 ## Best Practices
 
 ### 1. Format Before Committing
+
 Always run `npm run format` before committing changes.
 
 ### 2. Fix Linting Issues
+
 Address ESLint warnings when possible - they indicate potential issues.
 
 ### 3. Use Type Safety
+
 Avoid `any` types - use specific types or `unknown` with type guards.
 
 ### 4. Consistent Style
+
 Let Prettier handle formatting - don't fight it with manual formatting.
 
 ### 5. VS Code Integration
+
 Install recommended extensions for the best experience.
 
 ## Resources
@@ -331,6 +370,7 @@ Install recommended extensions for the best experience.
 ## Summary
 
 Your project now has:
+
 - ✅ ESLint configured for both frontend and backend
 - ✅ Prettier configured with consistent rules
 - ✅ VS Code integration with format-on-save

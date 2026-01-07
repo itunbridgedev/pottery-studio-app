@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import passport from "passport";
+import { Strategy as AppleStrategy } from "passport-apple";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import { Strategy as LocalStrategy } from "passport-local";
 import { comparePassword } from "../utils/auth";
@@ -159,6 +160,124 @@ passport.use(
     }
   )
 );
+
+// ========== Apple OAuth Strategy ==========
+
+if (process.env.APPLE_CLIENT_ID && process.env.APPLE_TEAM_ID) {
+  passport.use(
+    new AppleStrategy(
+      {
+        clientID: process.env.APPLE_CLIENT_ID,
+        teamID: process.env.APPLE_TEAM_ID,
+        keyID: process.env.APPLE_KEY_ID!,
+        privateKeyString: process.env.APPLE_PRIVATE_KEY!,
+        callbackURL:
+          process.env.APPLE_CALLBACK_URL ||
+          "http://localhost:4000/api/auth/apple/callback",
+        passReqToCallback: false,
+      },
+      async (
+        accessToken: string,
+        refreshToken: string,
+        idToken: string,
+        profile: any,
+        done: any
+      ) => {
+        try {
+          const email = profile.email;
+          const name = profile.name
+            ? `${profile.name.firstName || ""} ${profile.name.lastName || ""}`
+            : profile.email?.split("@")[0];
+          const appleId = profile.id;
+
+          if (!email) {
+            return done(
+              new Error("No email found in Apple profile"),
+              undefined
+            );
+          }
+
+          // Find or create customer
+          let customer = await prisma.customer.findUnique({
+            where: { email },
+            include: { accounts: true },
+          });
+
+          if (!customer) {
+            // Create new customer
+            customer = await prisma.customer.create({
+              data: {
+                email,
+                name: name || email.split("@")[0],
+                picture: null,
+                accounts: {
+                  create: {
+                    provider: "apple",
+                    providerAccountId: appleId,
+                    accessToken,
+                    refreshToken: refreshToken || null,
+                    expiresAt: null,
+                    tokenType: "Bearer",
+                    scope: null,
+                    idToken,
+                  },
+                },
+              },
+              include: { accounts: true },
+            });
+          } else {
+            // Update or create account for existing customer
+            const existingAccount = customer.accounts.find(
+              (acc) =>
+                acc.provider === "apple" && acc.providerAccountId === appleId
+            );
+
+            if (existingAccount) {
+              // Update existing account
+              await prisma.account.update({
+                where: { id: existingAccount.id },
+                data: {
+                  accessToken,
+                  refreshToken: refreshToken || null,
+                  idToken,
+                },
+              });
+            } else {
+              // Create new account for existing customer
+              await prisma.account.create({
+                data: {
+                  customerId: customer.id,
+                  provider: "apple",
+                  providerAccountId: appleId,
+                  accessToken,
+                  refreshToken: refreshToken || null,
+                  expiresAt: null,
+                  tokenType: "Bearer",
+                  scope: null,
+                  idToken,
+                },
+              });
+            }
+
+            // Update customer info if name is provided
+            if (name && name.trim()) {
+              customer = await prisma.customer.update({
+                where: { id: customer.id },
+                data: { name },
+                include: { accounts: true },
+              });
+            }
+          }
+
+          return done(null, customer);
+        } catch (error) {
+          console.error("Error in Apple OAuth strategy:", error);
+          return done(error as Error, undefined);
+        }
+      }
+    )
+  );
+}
 
 passport.serializeUser((user: any, done) => {
   done(null, user.id);

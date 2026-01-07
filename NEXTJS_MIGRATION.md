@@ -1,6 +1,6 @@
 # Next.js Migration Guide
 
-The Pottery Studio App has been successfully migrated from React (Vite) to Next.js 16 with the App Router and file-based routing.
+The Kiln Agent app has been successfully migrated from React (Vite) to Next.js 16 with the App Router and file-based routing.
 
 ## What Changed
 

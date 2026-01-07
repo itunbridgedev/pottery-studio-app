@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 
 export default function LoginPage() {
-  const { login, loginWithEmail, register } = useAuth();
+  const { login, loginWithApple, loginWithEmail, register } = useAuth();
   const router = useRouter();
   const [isRegistering, setIsRegistering] = useState(false);
   const [formData, setFormData] = useState({
@@ -53,11 +53,11 @@ export default function LoginPage() {
   return (
     <div className="login-container">
       <div className="login-card">
-        <h1>Pottery Studio App</h1>
+        <h1>Kiln Agent</h1>
         <p>
           {isRegistering
             ? "Create your account"
-            : "Sign in to manage your pottery studio"}
+            : "Sign in to manage your kiln"}
         </p>
 
         <form onSubmit={handleSubmit} className="auth-form">
@@ -157,6 +157,25 @@ export default function LoginPage() {
             />
           </svg>
           Continue with Google
+        </button>
+
+        <button onClick={loginWithApple} className="apple-login-btn">
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 18 18"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M13.48 7.08c-.08-1.98 1.61-2.93 1.69-2.98-.93-1.35-2.37-1.54-2.87-1.56-1.21-.12-2.38.72-3 .72-.63 0-1.58-.7-2.6-.68-1.34.02-2.57.78-3.26 1.98-1.4 2.42-.36 6.02 1 7.99.66.97 1.46 2.06 2.5 2.02 1-.04 1.38-.64 2.59-.64 1.2 0 1.55.64 2.59.62 1.07-.02 1.78-.99 2.45-1.97.77-1.12 1.09-2.21 1.11-2.27-.02-.01-2.13-.82-2.15-3.23z"
+              fill="currentColor"
+            />
+            <path
+              d="M11.23 3.48c.55-.67.92-1.59.82-2.52-.79.03-1.77.53-2.34 1.19-.51.59-.96 1.54-.84 2.45.89.07 1.8-.45 2.36-1.12z"
+              fill="currentColor"
+            />
+          </svg>
+          Continue with Apple
         </button>
 
         <div className="toggle-mode">

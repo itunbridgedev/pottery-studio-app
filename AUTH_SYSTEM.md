@@ -1,11 +1,12 @@
 # Authentication System Documentation
 
-A complete, production-ready authentication system supporting both OAuth (Google) and email/password authentication.
+A complete, production-ready authentication system supporting OAuth (Google, Apple) and email/password authentication.
 
 ## Features
 
 - **Email/Password Authentication**: Secure registration and login with password hashing
 - **Google OAuth**: Single sign-on with Google accounts
+- **Apple Sign In**: OAuth with Apple ID (supports email privacy)
 - **Session Management**: Secure cookie-based sessions
 - **Role-Based Access Control**: Ready for authorization implementation
 - **Password Validation**: Enforced password strength requirements
@@ -13,13 +14,22 @@ A complete, production-ready authentication system supporting both OAuth (Google
 
 ## Quick Start
 
-1. **Set up Google OAuth** (optional):
+1. **Set up OAuth providers** (optional):
 
-   - Follow `GOOGLE_OAUTH_SETUP.md` to get credentials
+   - **Google**: Follow `GOOGLE_OAUTH_SETUP.md` to get credentials
+   - **Apple**: Follow `APPLE_OAUTH_SETUP.md` to get credentials
    - Add to `/api/.env.development`:
+
      ```env
+     # Google OAuth
      GOOGLE_CLIENT_ID=your-client-id
      GOOGLE_CLIENT_SECRET=your-client-secret
+
+     # Apple OAuth
+     APPLE_CLIENT_ID=com.yourdomain.service
+     APPLE_TEAM_ID=ABC123XYZ
+     APPLE_KEY_ID=DEF456GHI
+     APPLE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----"
      ```
 
 2. **Start the application**:
@@ -113,6 +123,30 @@ GET /api/auth/google/callback
 
 Handles Google OAuth callback (automatic).
 
+### Apple OAuth
+
+#### Initiate Apple Sign In
+
+```http
+POST /api/auth/apple
+```
+
+Redirects to Apple's authorization page. User must approve:
+
+- Email sharing (required)
+- Name sharing (optional)
+- Email privacy (can hide real email)
+
+#### Apple Callback
+
+```http
+POST /api/auth/apple/callback
+```
+
+Handles Apple OAuth callback (automatic).
+
+**Note**: Apple uses POST for callbacks, unlike Google which uses GET.
+
 ### Session Management
 
 #### Get Current User
@@ -171,7 +205,15 @@ The `useAuth` hook provides all authentication functions:
 import { useAuth } from "./context/AuthContext";
 
 function MyComponent() {
-  const { user, loading, loginWithEmail, register, login, logout } = useAuth();
+  const {
+    user,
+    loading,
+    loginWithEmail,
+    register,
+    login,
+    loginWithApple,
+    logout,
+  } = useAuth();
 
   // Email/Password login
   const handleEmailLogin = async () => {
@@ -189,6 +231,17 @@ function MyComponent() {
     } catch (error) {
       console.error(error.message);
     }
+  };
+
+  // Google OAuth
+  const handleGoogleLogin = () => {
+    login(); // Redirects to Google
+  };
+
+  // Apple OAuth
+  const handleAppleLogin = () => {
+    loginWithApple(); // Redirects to Apple
+  };
   };
 
   // Google OAuth

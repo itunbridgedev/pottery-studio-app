@@ -1,6 +1,6 @@
 # Google OAuth Setup Guide
 
-Google OAuth has been fully implemented end-to-end in your Pottery Studio App. Follow these steps to complete the setup:
+Google OAuth has been fully implemented end-to-end in your Kiln Agent app. Follow these steps to complete the setup:
 
 ## 1. Create Google OAuth Credentials
 
@@ -16,7 +16,7 @@ Google OAuth has been fully implemented end-to-end in your Pottery Studio App. F
      - `userinfo.profile`
 6. Create OAuth client ID:
    - Application type: **Web application**
-   - Name: Pottery Studio App
+   - Name: Kiln Agent
    - Authorized JavaScript origins:
      - `http://localhost:3000` (for development)
      - Your production domain (when deploying)

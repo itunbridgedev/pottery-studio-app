@@ -30,6 +30,10 @@ Thumbs.db
 /api/.env
 /web/.env
 
+# Apple OAuth Keys
+*.p8
+AuthKey_*.p8
+
 # VS Code
 .vscode/
 .history/

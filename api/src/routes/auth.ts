@@ -139,6 +139,29 @@ router.get(
   }
 );
 
+// ========== Apple OAuth ==========
+
+router.post(
+  "/apple",
+  passport.authenticate("apple", {
+    scope: ["name", "email"],
+  })
+);
+
+// Apple OAuth callback
+router.post(
+  "/apple/callback",
+  passport.authenticate("apple", {
+    failureRedirect: `${
+      process.env.CLIENT_URL || "http://localhost:3000"
+    }/login?error=auth_failed`,
+  }),
+  (req, res) => {
+    // Successful authentication, redirect to client
+    res.redirect(`${process.env.CLIENT_URL || "http://localhost:3000"}/`);
+  }
+);
+
 // Get current user
 router.get("/me", isAuthenticated, (req, res) => {
   const user = req.user as any;
